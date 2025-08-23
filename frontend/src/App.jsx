@@ -1,12 +1,11 @@
-import { Login , Signup } from "./components"
-function App() {
-  
+import { Outlet } from 'react-router-dom'
+import Header from './components/Header/Header'
 
+export default function App() {
   return (
-    <>
-    <h1 className='bg-red-500'>hello</h1>
-    </>
+    <div className="min-h-screen bg-gray-50">
+      <Header />
+      <Outlet />
+    </div>
   )
 }
-
-export default App
