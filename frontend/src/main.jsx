@@ -10,7 +10,7 @@ import { Scanner } from './components/PlantDisease/Scanner'
 import { Contact } from './components/Contacts/Contacts'
 import { About } from './components/About/About'
 import UserContext from './contexts/UserContext'
-import { DynamicHeatMap } from './components/Heatmap/DynamicHeatMap'
+import { DynamicHeatMap } from './components/HeatMap/DynamicHeatMap'
 
 
 
