@@ -88,6 +88,16 @@ export default function Header() {
                             </li>
                             <li>
                                 <NavLink
+                                    to="/heatmap"
+                                    className={({isActive}) =>
+                                        `block py-2 pr-4 pl-3 duration-200 ${isActive ? "text-green-600" : "text-gray-700"} hover:text-green-600 lg:p-0`
+                                    }
+                                >
+                                 Heatmap
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink
                                     to="/about"
                                     className={({isActive}) =>
                                         `block py-2 pr-4 pl-3 duration-200 ${isActive ? "text-green-600" : "text-gray-700"} hover:text-green-600 lg:p-0`
