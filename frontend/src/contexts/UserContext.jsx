@@ -15,7 +15,7 @@ function UserContext({children}){
         let { data } = await axios.get(serverUrl + "/api/getuserdata", {
           withCredentials: true,
         });
-        setUserData(data);
+        setUserData(data.user);
       } catch (error) {
         setUserData(null); // Clear user data on error
         navigate("/login");

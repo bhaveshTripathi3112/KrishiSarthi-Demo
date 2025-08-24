@@ -1,16 +1,37 @@
-import React, { useContext } from 'react'
+import React, { useContext , useEffect } from 'react'
 import homeImage from '/src/assets/hero-image.jpeg' // Ensure you have an appropriate image in the assets folder
 import { Link, useNavigate } from 'react-router-dom';
-// import axios from 'axios';
-// import { dataContext } from '../../contexts/UserContext';
+import axios from 'axios';
+import { dataContext } from '../../contexts/UserContext';
 
 export  function Home() {
-    
+    let {serverUrl,userData , setUserData} = useContext(dataContext)
+    let navigate = useNavigate()
+    useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await axios.get(`${serverUrl}/api/me`, {
+          withCredentials: true, // important to send the JWT cookie
+        });
+        setUserData(res.data.user);
+      } catch (err) {
+        console.error(err);
+        navigate("/login"); // redirect if user is not authenticated
+      }
+    };
+
+    if (!userData) {
+      fetchUser();
+    }
+  }, [serverUrl, userData, setUserData, navigate]);
+  if (!userData) return <div>Loading...</div>;
+
     return (
         <div className="min-h-screen bg-gray-50">
             {/* Hero Section */}
             <section className="relative overflow-hidden">
                 <div className="container mx-auto px-4 py-16 lg:py-24">
+                    <h1 className='text-black font-bold gap-y-10 py-15 text-4xl'>welcome to  कृषिSarthi <span className='text-green-600'>{userData.firstName}</span></h1>
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                         <div className="space-y-8">
                             <h1 className="text-4xl lg:text-6xl font-bold text-gray-900">

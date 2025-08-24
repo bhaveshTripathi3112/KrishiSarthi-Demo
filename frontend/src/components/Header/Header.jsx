@@ -1,7 +1,7 @@
 import React, { useState ,useContext}  from 'react'
 import { Link, NavLink,useNavigate } from "react-router-dom"
-;
-
+// import axios from 'axios'
+// import { dataContext } from '../contexts/UserContext'
 export default function Header() {
     // let {serverUrl,userData , setUserData} = useContext(dataContext)
     
@@ -14,11 +14,11 @@ export default function Header() {
     //         let data = await axios.post(serverUrl+"api/logout",{},{
     //             withCredentials:true
     //         })
+    //         setUserData(null)
     //     } catch (error) {
     //         console.log(error);
     //     }
     // }
-    const [isLoggedIn, setIsLoggedIn] = useState(false); // Will be replaced with actual auth state
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     return (
@@ -44,37 +44,20 @@ export default function Header() {
                     </button>
 
                     <div className="flex items-center lg:order-2">
-                        {isLoggedIn ? (
-                            <>
-                                <Link
-                                    to="/scanner"
-                                    className="text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 focus:outline-none"
-                                >
-                                    Scan Plant
-                                </Link>
-                                <button
-                                    onClick={() => setIsLoggedIn(false)}
-                                    className="text-gray-800 hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 focus:outline-none"
-                                >
-                                    Logout
-                                </button>
-                            </>
-                        ) : (
-                            <>
-                                <Link
-                                    to="/login"
-                                    className="text-gray-800 hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 focus:outline-none"
-                                >
-                                    Log in
-                                </Link>
-                                <Link
-                                    to="/signup"
-                                    className="text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 focus:outline-none"
-                                >
-                                    Get started
-                                </Link>
-                            </>
-                        )}
+                        <Link
+                        to="#"
+                            className="text-gray-800 hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 focus:outline-none"
+                        >
+                            Chatbot
+                        </Link>
+                        <Link
+                            to="/login"
+                            className="text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 focus:outline-none"
+                            // onClick={handleLogOut}
+                        >
+                            LogOut
+                        </Link>
+                            
                     </div>
 
                     <div
