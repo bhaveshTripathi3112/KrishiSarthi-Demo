@@ -3,7 +3,7 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import axios from 'axios';
 
-const DynamicHeatMap = () => {
+export const DynamicHeatMap = () => {
   const mapRef = useRef(null);
   const markersRef = useRef([]); 
   const [map, setMap] = useState(null);
@@ -469,12 +469,3 @@ const DynamicHeatMap = () => {
   );
 };
 
-function App() {
-  return (
-    <div className="App">
-      <DynamicHeatMap />
-    </div>
-  );
-}
-
-export default App;

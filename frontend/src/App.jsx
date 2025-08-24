@@ -15,6 +15,7 @@ export default function App() {
         <Outlet />
         <Footer/>
       </UserContext>
+      
     </div>
   );
 }

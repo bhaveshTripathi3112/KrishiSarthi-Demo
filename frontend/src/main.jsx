@@ -10,6 +10,8 @@ import { Scanner } from './components/PlantDisease/Scanner'
 import { Contact } from './components/Contacts/Contacts'
 import { About } from './components/About/About'
 import UserContext from './contexts/UserContext'
+import { DynamicHeatMap } from './components/Heatmap/DynamicHeatMap'
+
 
 
 const router = createBrowserRouter(
@@ -22,6 +24,7 @@ const router = createBrowserRouter(
       <Route path="scanner" element={<Scanner />} />
       <Route path="contact" element={<Contact />} />
       <Route path="about" element={<About />} />
+      <Route path="heatmap" element={<DynamicHeatMap />} />
     </Route>
   )
 )
