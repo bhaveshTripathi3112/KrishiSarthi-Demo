@@ -1,14 +1,31 @@
 import React, { useContext, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { dataContext } from '../../contexts/UserContext'
+import axios from "axios";
 
 export function Signup() {
     let navigate = useNavigate()
+    let{serverUrl,userData,setUserData,getUserData} = useContext(dataContext)
     const [firstName,setFirstName] = useState(null)
     const [lastName , setLastName] = useState(null)
     const [phoneNumber , setPhoneNumber] = useState(null)
     const [password , setPassword] = useState(null)
 
+    const handleSignUp = async(e)=>{
+        e.preventDefault()
+        try {
+            
 
+            let {data} = await axios.post(serverUrl+"/api/signup",{firstName,lastName,phoneNumber,password},{
+                withCredentials:true,
+            })
+            await getUserData()
+            setUserData(data.user)
+            navigate("/home")
+        } catch (error) {
+            console.log(error.message);
+        }
+    }
 
     return (
         <div className='w-full h-screen bg-white flex justify-center items-center'>
@@ -17,6 +34,7 @@ export function Signup() {
                 <h1 className='text-white text-3xl font-semibold px-1.5 mt-6 py-3'>SignUp</h1>
                 <form 
                     className='w-full flex flex-col items-center justify-center gap-7'
+                    onSubmit={handleSignUp}
                 >
                     <div className='w-3/4 flex justify-center items-center gap-2.5'>
                         <input

@@ -1,5 +1,6 @@
 import { Outlet, useLocation } from 'react-router-dom'
 import Header from './components/Header/Header'
+import UserContext from './contexts/UserContext';
 
 export default function App() {
   const location = useLocation();
@@ -10,8 +11,9 @@ export default function App() {
   return (
     <div className="min-h-screen bg-gray-50">
       {shouldShowHeader && <Header />}
-      <Outlet />
-      
+      <UserContext>
+        <Outlet />
+      </UserContext>
     </div>
   );
 }

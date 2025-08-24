@@ -1,8 +1,11 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import homeImage from '/src/assets/hero-image.jpeg' // Ensure you have an appropriate image in the assets folder
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+// import axios from 'axios';
+// import { dataContext } from '../../contexts/UserContext';
 
 export  function Home() {
+    
     return (
         <div className="min-h-screen bg-gray-50">
             {/* Hero Section */}

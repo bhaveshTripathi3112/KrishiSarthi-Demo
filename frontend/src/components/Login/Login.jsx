@@ -5,17 +5,34 @@ import { useNavigate } from 'react-router-dom'
  import bgImage from "../../assets/bpg.jpeg";
 // Corrected the path to the image
 
+import axios from 'axios';
+import { dataContext } from '../../contexts/UserContext';
 
 export function Login() {
+    let {serverUrl,userData,setUserData,getUserData} = useContext(dataContext)
     let navigate = useNavigate()
     const [phoneNumber , setPhoneNumber] = useState(null)
     const [password , setPassword] = useState(null)
-      const handleSubmit = (e) => {
+    const [errorMessage, setErrorMessage] = useState('');
+      const handleSubmit = async(e) => {
         e.preventDefault();
-        // Add your login logic here
-        navigate('/home'); // Navigate to home page after login
+        try {
+            let {data} = await axios.post(serverUrl+"/api/login",{
+                phoneNumber,password
+            },{withCredentials:true})
+            console.log(data);
+            await getUserData()
+            
+            navigate('/home'); // Navigate to home page after login
+            
+        } catch (error) {
+            setErrorMessage(error.response.data.message);
+            
+        }
+
+       
+       
     }
-    
 
     return (
       <div
@@ -47,6 +64,7 @@ export function Login() {
       <button className="bg-[#00f9f9] text-black px-3 py-2.5 rounded-xl">
         Login
       </button>
+      {errorMessage && <p className="text-red-500">{errorMessage}</p>}
       <p
         className="text-white text-xl cursor-pointer"
         onClick={() => navigate("/signup")}
@@ -61,5 +79,7 @@ export function Login() {
        
         
     )
+
+
 
 }

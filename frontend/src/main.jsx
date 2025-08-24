@@ -9,6 +9,8 @@ import { Signup } from './components/Signup/Signup'
 import { Scanner } from './components/PlantDisease/Scanner'
 import { Contact } from './components/Contacts/Contacts'
 import { About } from './components/About/About'
+import UserContext from './contexts/UserContext'
+
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -25,7 +27,9 @@ const router = createBrowserRouter(
 )
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode >
+  <StrictMode>
+   
     <RouterProvider router={router} />
+    
   </StrictMode>
 )
