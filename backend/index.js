@@ -3,6 +3,7 @@ import dotenv from "dotenv"
 import cookieParser  from "cookie-parser"
 import  {connectDb}  from "./config/connectDB.js"
 import authRouter from "./routes/auth.routes.js"
+import locationRouter from "./routes/location.routes.js"
 import cors from "cors"
 
 dotenv.config()
@@ -18,7 +19,7 @@ app.use(cors({
 }))
 
 app.use("/api",authRouter)
-
+app.use("/api/locations", locationRouter);
 app.get("/",(req,res) =>{
     res.send("Server is running")
 })

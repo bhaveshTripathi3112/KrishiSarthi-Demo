@@ -2,8 +2,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import axios from 'axios';
-
+import { dataContext } from '../../contexts/UserContext';
+import { useContext } from 'react';
 export const DynamicHeatMap = () => {
+  const { userData } = useContext(dataContext);
   const mapRef = useRef(null);
   const markersRef = useRef([]); 
   const [map, setMap] = useState(null);
@@ -14,7 +16,7 @@ export const DynamicHeatMap = () => {
   const [stats, setStats] = useState(null);
   const [visualizationType, setVisualizationType] = useState('circles'); // New state for visualization type
 
-  const API_BASE_URL = 'http://localhost:3001/api';
+  const API_BASE_URL = 'http://localhost:8000/api';
 
   // Initialize map
   useEffect(() => {
@@ -84,78 +86,85 @@ export const DynamicHeatMap = () => {
   };
 
   // Save location to MongoDB
-  const saveLocationToMongoDB = async (location) => {
-    try {
-      console.log('Saving location:', location);
-      const response = await axios.post(`${API_BASE_URL}/locations`, {
-        coordinates: [location.lng, location.lat],
-        timestamp: location.timestamp,
-        intensity: location.intensity,
-        userId: 'user-' + Math.random().toString(36).substr(2, 9)
-      });
-      
-      console.log('Location saved successfully:', response.data);
-      
-      setTimeout(() => {
-        fetchLocationsFromMongoDB();
-        fetchStats();
-      }, 500);
-    } catch (error) {
-      console.error('Error saving location:', error);
-      setError('Failed to save location to database: ' + error.message);
-    }
-  };
+const saveLocationToMongoDB = async (location) => {
+  try {
+    const response = await axios.post(`${API_BASE_URL}/locations`, {
+      userId: userData?._id,          // Logged-in user ID
+      location: {
+        type: "Point",
+        coordinates: [location.lng, location.lat]  // [longitude, latitude]
+      },
+      intensity: location.intensity,
+      timestamp: location.timestamp
+    }, {
+      withCredentials: true
+    });
+
+    console.log('Location saved successfully:', response.data);
+
+    // Refresh map and stats after saving
+    setTimeout(() => {
+      fetchLocationsFromMongoDB();
+      fetchStats();
+    }, 500);
+
+  } catch (error) {
+    console.error('Error saving location:', error);
+    setError('Failed to save location to database: ' + (error.response?.data?.message || error.message));
+  }
+};
 
   // Fetch all locations from MongoDB
-  const fetchLocationsFromMongoDB = async () => {
-    try {
-      setIsLoading(true);
-      const response = await axios.get(`${API_BASE_URL}/locations`);
-      
-      if (!response.data || response.data.length === 0) {
-        console.log('No locations found in database');
-        setLocations([]);
-        setIsLoading(false);
-        return;
-      }
+const fetchLocationsFromMongoDB = async () => {
+  try {
+    setIsLoading(true);
+    const response = await axios.get(`${API_BASE_URL}/locations`, { withCredentials: true });
 
-      const locationData = [];
-      
-      response.data.forEach((item, index) => {
-        try {
-          if (!item.location || !item.location.coordinates || !Array.isArray(item.location.coordinates)) {
-            return;
-          }
-          
-          const coordinates = item.location.coordinates;
-          if (coordinates.length !== 2) return;
-          
-          const longitude = coordinates[0];
-          const latitude = coordinates[1];
-          const intensity = item.intensity || 0.5;
-          
-          if (typeof longitude !== 'number' || typeof latitude !== 'number' || 
-              longitude < -180 || longitude > 180 || latitude < -90 || latitude > 90) {
-            return;
-          }
-          
-          locationData.push([latitude, longitude, intensity]);
-          
-        } catch (error) {
-          console.error(`Error processing item ${index}:`, error);
-        }
-      });
-      
-      console.log('Final processed location data:', locationData);
-      setLocations(locationData);
-      updateMapWithVisualizations(locationData);
+    // Use response.data.locations if your backend wraps it in an object
+    const locationsArray = Array.isArray(response.data) ? response.data : response.data.locations || [];
+
+    if (locationsArray.length === 0) {
+      console.log('No locations found in database');
+      setLocations([]);
       setIsLoading(false);
-    } catch (error) {
-      console.error('Error fetching locations:', error);
-      setError('Failed to fetch locations from database: ' + error.message);
-      setIsLoading(false);
+      return;
     }
-  };
+
+    const locationData = [];
+
+    locationsArray.forEach((item, index) => {
+      try {
+        if (!item.location || !item.location.coordinates || !Array.isArray(item.location.coordinates)) {
+          return;
+        }
+
+        const [longitude, latitude] = item.location.coordinates;
+        const intensity = item.intensity || 0.5;
+
+        if (typeof longitude !== 'number' || typeof latitude !== 'number' ||
+            longitude < -180 || longitude > 180 || latitude < -90 || latitude > 90) {
+          return;
+        }
+
+        locationData.push([latitude, longitude, intensity]);
+
+      } catch (error) {
+        console.error(`Error processing item ${index}:`, error);
+      }
+    });
+
+    console.log('Final processed location data:', locationData);
+    setLocations(locationData);
+    updateMapWithVisualizations(locationData);
+    setIsLoading(false);
+
+  } catch (error) {
+    console.error('Error fetching locations:', error);
+    setError('Failed to fetch locations from database: ' + (error.response?.data?.message || error.message));
+    setIsLoading(false);
+  }
+};
+;
 
   // Fetch statistics
   const fetchStats = async () => {
@@ -264,7 +273,7 @@ export const DynamicHeatMap = () => {
   const clearAllLocations = async () => {
     if (window.confirm('Are you sure you want to clear all locations?')) {
       try {
-        await axios.delete(`${API_BASE_URL}/locations`);
+        await axios.delete(`${API_BASE_URL}/locations/clear`);
         setLocations([]);
         if (markersRef.current && markersRef.current.length > 0) {
           markersRef.current.forEach(marker => map.removeLayer(marker));
