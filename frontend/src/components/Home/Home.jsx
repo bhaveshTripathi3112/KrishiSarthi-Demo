@@ -59,7 +59,7 @@ export  function Home() {
                             <img 
                                 src={homeImage} 
                                 alt="Farmer using KrishiSarthi app" 
-                                className="rounded-lg shadow-xl"
+                                className="  rounded-lg shadow-xl"
                             />
                         </div>
                     </div>
