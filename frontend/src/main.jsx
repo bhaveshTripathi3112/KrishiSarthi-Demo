@@ -11,6 +11,7 @@ import { Contact } from './components/Contacts/Contacts'
 import { About } from './components/About/About'
 import UserContext from './contexts/UserContext'
 import { DynamicHeatMap } from './components/HeatMap/DynamicHeatMap'
+import Chatbot from './components/Chatbot/Chatbot'
 
 
 
@@ -25,6 +26,7 @@ const router = createBrowserRouter(
       <Route path="contact" element={<Contact />} />
       <Route path="about" element={<About />} />
       <Route path="heatmap" element={<DynamicHeatMap />} />
+      <Route path="chatbot" element = {<Chatbot/>} />
     </Route>
   )
 )
